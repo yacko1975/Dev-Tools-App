@@ -1,0 +1,18 @@
+﻿<?xml version='1.0' encoding='utf-8'?>
+<SettingsFile xmlns="http://schemas.microsoft.com/VisualStudio/2004/01/settings" CurrentProfile="(Default)" GeneratedClassNamespace="My" GeneratedClassName="MySettings" UseMySettingsClassName="true">
+  <Profiles />
+  <Settings>
+    <Setting Name="SPUsers" Type="System.String" Scope="Application">
+      <Value Profile="(Default)">Web|Admin</Value>
+    </Setting>
+    <Setting Name="histConnectionString" Type="System.String" Scope="User">
+      <Value Profile="(Default)" />
+    </Setting>
+    <Setting Name="histServer" Type="System.String" Scope="User">
+      <Value Profile="(Default)">rvtaxdb1\ecommprod|rvtaxdb1\ecommtest</Value>
+    </Setting>
+    <Setting Name="langDefault" Type="System.String" Scope="Application">
+      <Value Profile="(Default)">C#</Value>
+    </Setting>
+  </Settings>
+</SettingsFile>
