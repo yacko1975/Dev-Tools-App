@@ -35,17 +35,17 @@ Namespace Includes
       Dim sb As New StringBuilder
       Dim iMax, iMin As Int64
 
-      If iFlags.BWContainsAll(enDataAnnotationFlags.Display) Then
+      If iFlags.HasFlag(enDataAnnotationFlags.Display) Then
         sb.AppendFormat("[Display(Description = ""{0}"", ShortName = ""{0}"")]", col.sColumnName)
         sb.AppendLine()
       End If
 
-      If iFlags.BWContainsAll(enDataAnnotationFlags.Required) Then
+      If iFlags.HasFlag(enDataAnnotationFlags.Required) Then
         sb.AppendFormat("[Required(ErrorMessage = ""Value for {0} is required"")]", col.sColumnName)
         sb.AppendLine()
       End If
 
-      If iFlags.BWContainsAll(enDataAnnotationFlags.Validation) Then
+      If iFlags.HasFlag(enDataAnnotationFlags.Validation) Then
         Select Case col.sColumnType.ToLower
           Case "decimal", "double", "single", "double"
             sb.AppendLine("//[Range( 0.01, 100.00, ErrorMessage =""Value for {0} must be between {1} And {2}"")]")
@@ -89,7 +89,7 @@ Namespace Includes
         End Select
       End If
 
-      If iFlags.BWContainsAll(enDataAnnotationFlags.Format) Then
+      If iFlags.HasFlag(enDataAnnotationFlags.Format) Then
         Select Case col.sColumnType.ToLower
           Case "decimal"
             sb.AppendLine("[DisplayFormat(DataFormatString=""{0:C}"", ApplyFormatInEditMode = false )]")

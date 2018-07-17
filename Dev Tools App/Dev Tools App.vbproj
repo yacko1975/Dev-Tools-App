@@ -47,9 +47,6 @@
     <OptionInfer>On</OptionInfer>
   </PropertyGroup>
   <ItemGroup>
-    <Reference Include="KDOR_Global">
-      <HintPath>Z:\References\4_0\KDOR_Global.dll</HintPath>
-    </Reference>
     <Reference Include="System" />
     <Reference Include="System.Data" />
     <Reference Include="System.Deployment" />
@@ -62,7 +59,7 @@
     <Reference Include="System.Net.Http" />
   </ItemGroup>
   <ItemGroup>
-    <Import Include="KDOR.Extensions" />
+    <Import Include="Dev_Tools_App.Extensions" />
     <Import Include="Microsoft.VisualBasic" />
     <Import Include="System" />
     <Import Include="System.Collections" />
@@ -94,6 +91,7 @@
     <Compile Include="FormatString.vb">
       <SubType>Form</SubType>
     </Compile>
+    <Compile Include="Includes\Extensions.vb" />
     <Compile Include="SPBuilder.Designer.vb">
       <DependentUpon>SPBuilder.vb</DependentUpon>
     </Compile>
