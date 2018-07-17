@@ -83,14 +83,15 @@ Namespace Includes.Types
 
       End Set
     End Property
+
     Public Function SPNameOnly() As String
       Dim lParts As List(Of String)
 
       If sSPName.Contains(".") Then
         lParts = sSPName.Split(".").ToList
-
-
-
+        Return lParts.Last
+      Else
+        Return sSPName
       End If
 
     End Function

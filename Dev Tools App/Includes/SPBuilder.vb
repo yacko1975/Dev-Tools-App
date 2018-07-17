@@ -1,7 +1,6 @@
 ﻿Imports System
 Imports System.Data
 Imports System.Data.OleDb
-Imports KDOR.Extensions
 
 Namespace Includes
 
