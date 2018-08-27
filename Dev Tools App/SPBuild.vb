@@ -73,7 +73,7 @@
     TableRec.sTable = cbxTable.Text
 
     For Each item In clbType.CheckedItems
-      Select Case item.ToString.ToLower
+      Select Case item.ToString
         Case "Delete"
           TableRec.Action += 8
         Case "Select All Records"

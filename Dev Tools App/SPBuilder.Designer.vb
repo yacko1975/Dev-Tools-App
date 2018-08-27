@@ -132,7 +132,7 @@ Partial Class SPBuilder
     '
     Me.cbxLanguage.AutoCompleteCustomSource.AddRange(New String() {"C#", "VB.Net"})
     Me.cbxLanguage.FormattingEnabled = True
-    Me.cbxLanguage.Items.AddRange(New Object() {"C#", "VB.Net"})
+    Me.cbxLanguage.Items.AddRange(New Object() {"C#", "VB.Net", "C# Dapper"})
     Me.cbxLanguage.Location = New System.Drawing.Point(572, 80)
     Me.cbxLanguage.Name = "cbxLanguage"
     Me.cbxLanguage.Size = New System.Drawing.Size(121, 21)

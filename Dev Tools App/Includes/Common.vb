@@ -230,44 +230,101 @@ Namespace Includes
 
     End Function
 
-    Public Shared Function GetModelInfo_CS(ByVal sType As String, Optional ByVal bAppendSpace As Boolean = False) As String
-      Dim sbType As New StringBuilder
+    Public Shared Function GetType_Dapper(ByVal sType As String) As String
 
-      With sbType
+      With sType
         Select Case sType
-          Case "decimal", "numeric", "money", "smallmoney"
-            .Append("decimal")
-          Case "smallint", "tinyint"
-            .Append("short")
+          Case "decimal", "numeric"
+            Return "Decimal"
+          Case "money"
+            Return "Money"
+          Case "smallmoney"
+            Return "SmallMoney"
+          Case "smallint"
+            Return "SmallInt"
+          Case "tinyint"
+            Return "TinyInt"
           Case "int"
-            .Append("int")
+            Return "Int"
           Case "bigint"
-            .Append("long")
-          Case "char", "varchar", "nchar", "nvarchar", "text"
-            .Append("string")
-          Case "float", "real"
-            .Append("double")
-          Case "datetime", "smalldatetime", "date", "datetime2"
-            .Append("[")
+            Return "BigInt"
+          Case "char"
+            Return "Char"
+          Case "varchar"
+            Return "VarChar"
+          Case "nchar"
+            Return "NChar"
+          Case "nvarchar"
+            Return "NVarChar"
+          Case "text"
+            Return "Text"
+          Case "float"
+            Return "Float"
+          Case "real"
+            Return "Real"
+          Case "datetime"
+            Return "DateTime"
+          Case "smalldatetime"
+            Return "SmallDateTime"
+          Case "date"
+            Return "Date"
+          Case "datetime2"
+            Return "DateTime2"
           Case "datetimeoffset"
-            .Append("DateTimeOffset")
+            Return "DateTimeOffset"
           Case "time"
-            .Append("TimeSpan")
+            Return "TimeSpan"
           Case "bit"
-            .Append("bool")
-          Case "binary", "varbinary", "image"
-            .Append("byte[]")
+            Return "Bit"
+          Case "binary"
+            Return "VarBinary"
+          Case "varbinary"
+            Return "VarBinary"
+          Case "image"
+            Return "Binary"
           Case Else
-            .Append("**Unknown**")
+            Return "**Unknown**"
         End Select
       End With
 
-      If bAppendSpace Then
-        sbType.Append(Space(1))
-      End If
 
+    End Function
 
-      Return sbType.ToString
+    Public Shared Function GetTypeInfo(ByVal sType As String) As String
+
+      With sType
+        Select Case sType
+          Case "decimal", "numeric", "money", "smallmoney"
+            Return "Decimal"
+          Case "smallint"
+            Return "Int16"
+          Case "tinyint"
+            Return "Byte"
+          Case "int"
+            Return "Int32"
+          Case "bigint"
+            Return "Int64"
+          Case "char", "varchar", "nchar", "nvarchar", "text"
+            Return "String"
+          Case "float"
+            Return "Double"
+          Case "real"
+            Return "Single"
+          Case "datetime", "smalldatetime", "date", "datetime2"
+            Return "DateTime"
+          Case "datetimeoffset"
+            Return "DateTimeOffset"
+          Case "time"
+            Return "TimeSpan"
+          Case "bit"
+            Return "Boolean"
+          Case "binary", "varbinary", "image", "timestamp", "rowversion", "filestream"
+            Return "Byte[]"
+          Case Else
+            Return "**Unknown**"
+        End Select
+      End With
+
 
     End Function
 
@@ -282,13 +339,17 @@ Namespace Includes
         Select Case sColumnType
           Case "decimal", "numeric", "money", "smallmoney"
             If bRemoveNulls Then
-              .AppendFormat("Convert.ToDecimal(KDOR.DBFunctions.RemoveNulls(DBCmd.Parameters[""{0}""].Value, KDOR.DBFunctions.ObjectTypes.Numbers, 0))", sParameterName)
+              .Append("Convert.ToDecimal(")
+              .Append(My.Settings.RemoveNullsFunction)
+              .AppendFormat("(DBCmd.Parameters[""{0}""].Value, KDOR.DBFunctions.ObjectTypes.Numbers, 0))", sParameterName)
             Else
               .AppendFormat("Convert.ToDecimal(DBCmd.Parameters[""{0}""].Value)", sParameterName)
             End If
           Case "int"
             If bRemoveNulls Then
-              .AppendFormat("Convert.ToInt32(KDOR.DBFunctions.RemoveNulls(DBCmd.Parameters[""{0}""].Value,KDOR.DBFunctions.ObjectTypes.Numbers, 0))", sParameterName)
+              .Append("Convert.ToInt32(")
+              .Append(My.Settings.RemoveNullsFunction)
+              .AppendFormat("(DBCmd.Parameters[""{0}""].Value,KDOR.DBFunctions.ObjectTypes.Numbers, 0))", sParameterName)
             Else
               .AppendFormat("Convert.ToInt32(DBCmd.Parameters[""{0}""].Value)", sParameterName)
 
@@ -296,54 +357,67 @@ Namespace Includes
 
           Case "smallint", "tinyint"
             If bRemoveNulls Then
-              .AppendFormat("Convert.ToInt16(KDOR.DBFunctions.RemoveNulls(DBCmd.Parameters[""{0}""].Value,KDOR.DBFunctions.ObjectTypes.Numbers, 0))", sParameterName)
+              .Append("Convert.ToInt16(")
+              .Append(My.Settings.RemoveNullsFunction)
+              .AppendFormat("(DBCmd.Parameters[""{0}""].Value,KDOR.DBFunctions.ObjectTypes.Numbers, 0))", sParameterName)
             Else
               .AppendFormat("Convert.ToInt16(DBCmd.Parameters[""{0}""].Value)", sParameterName)
 
             End If
           Case "bigint"
             If bRemoveNulls Then
-              .AppendFormat("Convert.ToInt64(KDOR.DBFunctions.RemoveNulls(DBCmd.Parameters[""{0}""].Value,KDOR.DBFunctions.ObjectTypes.Numbers, 0))", sParameterName)
+              .Append("Convert.ToInt64(")
+              .Append(My.Settings.RemoveNullsFunction)
+              .AppendFormat("(DBCmd.Parameters[""{0}""].Value,KDOR.DBFunctions.ObjectTypes.Numbers, 0))", sParameterName)
             Else
               .AppendFormat("Convert.ToInt64(DBCmd.Parameters[""{0}""].Value)", sParameterName)
 
             End If
           Case "char", "varchar", "nchar", "nvarchar", "text"
             If bRemoveNulls Then
-              .AppendFormat("KDOR.DBFunctions.RemoveNulls(DBCmd.Parameters[""{0}""].Value,KDOR.DBFunctions.ObjectTypes.Strings).ToString()", sParameterName)
+              .Append(My.Settings.RemoveNullsFunction)
+              .AppendFormat("(DBCmd.Parameters[""{0}""].Value,KDOR.DBFunctions.ObjectTypes.Strings).ToString()", sParameterName)
             Else
               .AppendFormat("DBCmd.Parameters[""{0}""].Value.ToString()", sParameterName)
             End If
           Case "float", "real"
             If bRemoveNulls Then
-              .AppendFormat("Convert.ToDouble(KDOR.DBFunctions.RemoveNulls(DBCmd.Parameters[""{0}""].Value,KDOR.DBFunctions.ObjectTypes.Numbers, 0))", sParameterName)
+              .Append("Convert.ToDouble(")
+              .Append(My.Settings.RemoveNullsFunction)
+              .AppendFormat("(DBCmd.Parameters[""{0}""].Value,KDOR.DBFunctions.ObjectTypes.Numbers, 0))", sParameterName)
             Else
               .AppendFormat("Convert.ToDouble(DBCmd.Parameters[""{0}""].Value)", sParameterName)
 
             End If
           Case "datetime", "smalldatetime", "date", "datetime2"
             If bRemoveNulls Then
-              .AppendFormat("Convert.ToDateTime(KDOR.DBFunctions.RemoveNulls(DBCmd.Parameters[""{0}""].Value,KDOR.DBFunctions.ObjectTypes.Dates, null))", sParameterName)
+              .Append("Convert.ToDateTime(")
+              .Append(My.Settings.RemoveNullsFunction)
+              .AppendFormat("(DBCmd.Parameters[""{0}""].Value,KDOR.DBFunctions.ObjectTypes.Dates, null))", sParameterName)
             Else
               .AppendFormat("Convert.ToDateTime(DBCmd.Parameters[""{0}""].Value)", sParameterName)
 
             End If
           Case "time"
             If bRemoveNulls Then
-              .AppendFormat("TimeSpan.Parse(KDOR.DBFunctions.RemoveNulls(DBCmd.Parameters[""{0}""].Value,KDOR.DBFunctions.ObjectTypes.Dates, null).ToString())", sParameterName)
+              .Append("TimeSpan.Parse(")
+              .Append(My.Settings.RemoveNullsFunction)
+              .AppendFormat("(DBCmd.Parameters[""{0}""].Value,KDOR.DBFunctions.ObjectTypes.Dates, null).ToString())", sParameterName)
             Else
               .AppendFormat("TimeSpan.Parse(DBCmd.Parameters[""{0}""].Value.ToString())", sParameterName)
 
             End If
           Case "datetimeoffset"
             If bRemoveNulls Then
-              .AppendFormat("DateTimeOffset.Parse(KDOR.DBFunctions.RemoveNulls(DBCmd.Parameters[""{0}""].Value,KDOR.DBFunctions.ObjectTypes.Dates, null).ToString())", sParameterName)
+              .Append("DateTimeOffset.Parse(")
+              .Append(My.Settings.RemoveNullsFunction)
+              .AppendFormat("(DBCmd.Parameters[""{0}""].Value,KDOR.DBFunctions.ObjectTypes.Dates, null).ToString())", sParameterName)
             Else
               .AppendFormat("DateTimeOffset.Parse(DBCmd.Parameters[""{0}""].Value.ToString())", sParameterName)
 
             End If
           Case "geography"
-            .Append("//Geography is not supported on forms")
+            .Append("//Geography Is Not supported on forms")
           Case "binary", "varbinary"
             'If bRemoveNulls Then
             '  .AppendFormat("KDOR.DBFunctions.RemoveNulls(DBCmd.Parameters[""{0}""].Value,KDOR.DBFunctions.ObjectTypes.Strings).ToString()", sParameterName)
@@ -352,7 +426,9 @@ Namespace Includes
             'End If
           Case "bit"
             If bRemoveNulls Then
-              .AppendFormat("Convert.ToBoolean(KDOR.DBFunctions.RemoveNulls(DBCmd.Parameters[""{0}""].Value,KDOR.DBFunctions.ObjectTypes.Booleans, false))", sParameterName)
+              .Append("Convert.ToBoolean(")
+              .Append(My.Settings.RemoveNullsFunction)
+              .AppendFormat("(DBCmd.Parameters[""{0}""].Value,KDOR.DBFunctions.ObjectTypes.Booleans, false))", sParameterName)
             Else
               .AppendFormat("Convert.ToBoolean(DBCmd.Parameters[""{0}""].Value)", sParameterName)
 
@@ -395,7 +471,7 @@ Namespace Includes
           Case "binary", "varbinary", "image"
             .AppendFormat("ctype(DBCmd.Parameters(""{0}"").Value, byte())", sParameterName)
           Case "geography"
-            .Append("//Geography is not supported on forms")
+            .Append("//Geography Is Not supported on forms")
           Case "bit"
             .AppendFormat("Convert.ToBoolean(DBCmd.Parameters(""{0}"").Value)", sParameterName)
         End Select
@@ -445,6 +521,7 @@ Namespace Includes
       Return sbOutput.ToString
 
     End Function
+
 
     Public Shared Function GetSQLDbType(ByVal InputString As String) As String
       Dim sbOutput As New StringBuilder()

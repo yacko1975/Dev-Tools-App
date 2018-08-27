@@ -11,8 +11,14 @@
     <Setting Name="histServer" Type="System.String" Scope="User">
       <Value Profile="(Default)">rvtaxdb1\ecommprod|rvtaxdb1\ecommtest</Value>
     </Setting>
-    <Setting Name="langDefault" Type="System.String" Scope="Application">
+    <Setting Name="langDefault" Type="System.String" Scope="User">
       <Value Profile="(Default)">C#</Value>
+    </Setting>
+    <Setting Name="RemoveNullsFunction" Type="System.String" Scope="User">
+      <Value Profile="(Default)">KDOR.DBFunctions.RemoveNulls</Value>
+    </Setting>
+    <Setting Name="SendNullsFunction" Type="System.String" Scope="User">
+      <Value Profile="(Default)">KDOR.DBFunctions.SendNulls</Value>
     </Setting>
   </Settings>
 </SettingsFile>
