@@ -53,4 +53,10 @@
     frmBuild.MdiParent = Me
     frmBuild.Show()
   End Sub
+
+  Private Sub SettingsToolStripMenuItem_Click(sender As Object, e As EventArgs) Handles SettingsToolStripMenuItem.Click
+    Dim frmOptions As New Options
+    frmOptions.MdiParent = Me
+    frmOptions.Show()
+  End Sub
 End Class

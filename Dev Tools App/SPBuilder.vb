@@ -59,9 +59,9 @@
         Case "Pass Nulls using KDOR.clsdbfunctions.SendNulls"
           TableRec.addOption(Includes.Types.CallBuilder.SendNulls)
         Case "Use Local Variables based on the table for variables"
-          TableRec.addOption(Includes.Types.CallBuilder.TableCls)
-        Case "Use Type Class Generated on a table for variables"
           TableRec.addOption(Includes.Types.CallBuilder.UseLocal)
+        Case "Use Type Class Generated on a table for variables"
+          TableRec.addOption(Includes.Types.CallBuilder.TableCls)
         Case "Use private connection string (_ConnectionString)"
           TableRec.addOption(Includes.Types.CallBuilder.PrivateConnectionString)
         Case "Create the entire class, not just the function"
@@ -80,11 +80,14 @@
 
     TableRec.sUsername = My.User.Name
 
-    If cbxLanguage.Text = "C#" Then
-      txtCode.Text = DBBuilder.Build_SP_Code_CS(TableRec)
-    Else
-      txtCode.Text = DBBuilder.Build_SP_Code_VB(TableRec)
-    End If
+    Select Case cbxLanguage.Text
+      Case "C#"
+        txtCode.Text = DBBuilder.Build_SP_Code_CS(TableRec)
+      Case "VB"
+        txtCode.Text = DBBuilder.Build_SP_Code_VB(TableRec)
+      Case "C# Dapper"
+        txtCode.Text = DBBuilder.Build_Dapper_SP_Code_CS(TableRec)
+    End Select
 
 
 

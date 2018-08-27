@@ -8,6 +8,8 @@ Namespace Includes
 
   Public Class DBBuilder
     Private _ConnectionString As String
+    Private _SendNullsFunction As String
+    Private _RemoveNullsFunction As String
 
     Public Function Build_SP_Debug_Script(ByRef TableRec As Types.TableFmt) As String
       Dim DBConn As New SqlConnection(_ConnectionString)
@@ -250,7 +252,8 @@ Namespace Includes
         If dvRow("PARAMETER_MODE") = "IN" Then
           sSP.Append(").Value = ")
           If TableRec.isAnyOptionSet(CallBuilder.SendNulls) Then
-            sSP.Append("KDOR.dbFunctions.SendNulls(")
+            sSP.Append(_SendNullsFunction)
+            sSP.Append("(")
           End If
           Select Case True
             Case TableRec.isAnyOptionSet(CallBuilder.CreateOptionalArgument)
@@ -359,7 +362,8 @@ Namespace Includes
             End If
             sSP.Append(" = ")
             If TableRec.SPOptions And CallBuilder.RemoveNulls Then
-              sSP.AppendFormat("KDOR.DBFunctions.RemoveNulls(DBCmd.Parameters(""{0}"").Value,", dvRow("PARAMETER_NAME"))
+              sSP.Append(_RemoveNullsFunction)
+              sSP.AppendFormat("(DBCmd.Parameters(""{0}"").Value,", dvRow("PARAMETER_NAME"))
               Select Case dvRow("DATA_TYPE")
                 Case "decimal", "numeric", "int", "smallint", "tinyint", "money", "smallmoney", "bigint", "float", "real"
                   sSP.Append("KDOR.DBFunctions.ObjectTypes.Numbers, 0)")
@@ -573,7 +577,8 @@ Namespace Includes
         If dvRow("PARAMETER_MODE") = "IN" Then
           sSP.Append(").Value = ")
           If TableRec.isAnyOptionSet(CallBuilder.SendNulls) Then
-            sSP.Append("KDOR.DBFunctions.SendNulls(")
+            sSP.Append(_SendNullsFunction)
+            sSP.Append("(")
           End If
           Select Case True
             Case TableRec.isAnyOptionSet(CallBuilder.CreateOptionalArgument)
@@ -743,8 +748,285 @@ Namespace Includes
 
     End Function
 
+    Public Function Build_Dapper_SP_Code_CS(ByRef TableRec As Types.TableFmt) As String
+      Dim DBConn As New SqlConnection(_ConnectionString)
+      Dim tb As DataTable
+
+      Dim sSP As New System.Text.StringBuilder
+
+      Dim bTemp As Boolean
+      Dim dvTbl As DataView
+      Dim iParamCount As Int32 = 0
+
+
+
+
+      DBConn.Open()
+
+      tb = DBConn.GetSchema("ProcedureParameters", New String() {Nothing, TableRec.Schema, TableRec.SPName, Nothing})
+      dvTbl = New DataView(tb)
+      dvTbl.Sort = "Ordinal_Position asc"
+      'Build our DataRow and StringBuilder objects
+      DBConn.Close()
+      'For intPntr = 0 To tb.Columns.Count - 1
+      '  System.Diagnostics.Trace.WriteLine(tb.Columns(intPntr).ColumnName & " " & intPntr)
+      'Next
+      'Create our stored procedure heading information
+      If TableRec.isAnyOptionSet(CallBuilder.CreateNewClass) Then
+        sSP.Append("public class ")
+        sSP.AppendLine("[Class Name] {")
+        sSP.AppendLine()
+        sSP.Append(clsCommon.CreatePrivateVariables_CS(TableRec))
+        If TableRec.isAnyOptionSet(Types.CallBuilder.UseTransaction, Types.CallBuilder.UseGlobalConnection) Then
+          sSP.AppendLine(clsCommon.CreateDBOpenClose_CS(TableRec))
+        End If
+      End If
+      sSP.Append("public ")
+      If TableRec.SPOptions And CallBuilder.DataReader Then
+        sSP.Append("SqlDataReader ")
+      Else
+        sSP.Append("Int32 ")
+      End If
+      sSP.Append(TableRec.SPName.Substring(0, 1).ToUpper)
+      sSP.Append(TableRec.SPName.Substring(1))
+      Select Case True
+        Case TableRec.isAnyOptionSet(CallBuilder.CreateOptionalArgument)
+          bTemp = False
+          sSP.Append("(")
+          For Each dvRow As DataRowView In dvTbl
+            If dvRow("PARAMETER_MODE").ToString.Contains("IN") Then
+              If bTemp Then
+                sSP.Append(",")
+              Else
+
+              End If
+              sSP.Append(clsCommon.GetType_CS(dvRow("DATA_TYPE"), True))
+              sSP.Append(dvRow("PARAMETER_NAME").ToString.Substring(1))
+              sSP.AppendFormat(" = {0}", clsCommon.GetDefaultForType_CS(dvRow("DATA_TYPE")))
+              bTemp = True
+            End If
+          Next
+          sSP.Append(") {")
+        Case Else
+          sSP.Append("() {")
+      End Select
+      sSP.AppendLine()
+      Select Case True
+        Case TableRec.isAnyOptionSet(CallBuilder.UseGlobalConnection)
+
+        Case TableRec.isAllOptionSet(CallBuilder.DataReader, CallBuilder.PrivateConnectionString)
+          sSP.AppendLine("var dbConn = new SqlConnection(_ConnectionString);")
+
+        Case TableRec.isAllOptionSet(CallBuilder.DataReader)
+          sSP.AppendLine("var dbConn = new SqlConnection(Properties.Settings.Default.")
+          sSP.Append(TableRec.sDatabase)
+          sSP.AppendLine("DB);")
+        Case TableRec.isAnyOptionSet(CallBuilder.PrivateConnectionString)
+          sSP.AppendLine("using (var dbConn = new SqlConnection(_ConnectionString))")
+          sSP.AppendLine("  {")
+        Case Else
+          sSP.Append("using (var dbConn = new SqlConnection(Properties.Settings.Default.")
+          sSP.Append(TableRec.sDatabase)
+          sSP.AppendLine("DB))")
+          sSP.AppendLine("{")
+      End Select
+
+
+
+
+
+      If TableRec.isAnyOptionSet(CallBuilder.ExceptionHandling) Then
+        sSP.AppendLine("try")
+        sSP.Append("{")
+        sSP.AppendLine()
+      End If
+      If TableRec.isAnyOptionSet(CallBuilder.CreateOptionalArgument) Then
+        For Each dvRow As DataRowView In dvTbl
+
+          If dvRow("PARAMETER_MODE").ToString.Contains("IN") Then
+            sSP.Append(clsCommon.CreateOptionalArgCode_CS(dvRow("PARAMETER_NAME").ToString.Substring(1), dvRow("DATA_TYPE")))
+          End If
+        Next
+      End If
+
+
+      sSP.AppendLine()
+      sSP.AppendLine("var dpParam = new DynamicParameters();")
+      sSP.AppendLine()
+
+      For Each dvRow As DataRowView In dvTbl
+        'row = tb.Rows(intPntr)
+        '        If dvRow("PARAMETER_TYPE") <> 4 Then
+        sSP.Append("dpParam.Add(""")
+        sSP.Append(dvRow("PARAMETER_NAME"))
+        sSP.Append(""", ")
+
+
+
+
+
+        'sSP.Append("DBCmd.Parameters.Add(""" & dvRow("PARAMETER_NAME") & """")
+        'sSP.Append(", SqlDbType." & clsCommon.GetSQLDbType(dvRow("DATA_TYPE")))
+        'If IsDBNull(dvRow("CHARACTER_MAXIMUM_LENGTH")) Then
+
+        'Else
+        '  sSP.Append(", " & dvRow("CHARACTER_MAXIMUM_LENGTH"))
+        'End If
+        If dvRow("PARAMETER_MODE") = "IN" Then
+
+          Select Case True
+            Case TableRec.isAnyOptionSet(CallBuilder.CreateOptionalArgument)
+              sSP.Append(dvRow("PARAMETER_NAME").ToString.Substring(1))
+            Case TableRec.isAnyOptionSet(CallBuilder.TableCls)
+              sSP.Append("[CLASSNAME].")
+              sSP.Append(dvRow("PARAMETER_NAME").ToString.Substring(1))
+            Case TableRec.isAnyOptionSet(CallBuilder.UseLocal)
+              sSP.Append(dvRow("PARAMETER_NAME").ToString.Substring(1))
+            Case Else
+              sSP.Append("[VALUE]")
+          End Select
+          sSP.AppendLine(");")
+        Else
+          sSP.Append("dbType: DbType.")
+          sSP.Append(clsCommon.GetTypeInfo(dvRow("DATA_TYPE")))
+
+          If dvRow("ORDINAL_POSITION") = 0 Then
+            sSP.Append(", direction: ParameterDirection.ReturnValue")
+          Else
+            Select Case dvRow("PARAMETER_MODE")
+              Case "IN"
+                sSP.Append(", direction: ParameterDirection.Input")
+              Case Else
+                sSP.Append(", direction: ParameterDirection.Output")
+            End Select
+          End If
+
+          If IsDBNull(dvRow("CHARACTER_MAXIMUM_LENGTH")) Then
+
+          Else
+            sSP.Append(", size: ")
+            sSP.Append(dvRow("CHARACTER_MAXIMUM_LENGTH"))
+          End If
+
+          If dvRow("DATA_TYPE") = "decimal" Or dvRow("DATA_TYPE") = "numeric" Then
+            sSP.Append(", precision: ")
+            sSP.Append(dvRow("NUMERIC_PRECISION"))
+            sSP.Append(", scale :  ")
+            sSP.Append(dvRow("NUMERIC_SCALE"))
+          End If
+
+          sSP.AppendLine(");")
+        End If
+        iParamCount += 1
+      Next
+
+
+      'We can finish up our string concatenation with our footer information
+
+      If TableRec.isAnyOptionSet(CallBuilder.UseTransaction, CallBuilder.UseGlobalConnection) Then
+      Else
+        sSP.AppendLine()
+        sSP.AppendLine("dbConn.Open();")
+      End If
+
+      sSP.AppendLine()
+
+      If TableRec.isAnyOptionSet(CallBuilder.DataReader) Then
+
+        sSP.Append("return dbConn.ExecuteReader(""")
+        sSP.Append(TableRec.FullSPName)
+        sSP.Append("""")
+        If iParamCount > 0 Then
+          sSP.Append(", dpParam")
+        End If
+        sSP.AppendLine(", commandType: CommandType.StoredProcedure);")
+
+      Else
+        sSP.Append("var affectedRows = dbConn.Execute(""")
+        sSP.Append(TableRec.FullSPName)
+        sSP.Append("""")
+        If iParamCount > 0 Then
+          sSP.Append(", dpParam")
+        End If
+        sSP.AppendLine(", commandType: CommandType.StoredProcedure);")
+
+        sSP.AppendLine()
+
+        For Each dvRow As DataRowView In dvTbl
+          If dvRow("PARAMETER_MODE") <> "IN" Then
+            If (TableRec.SPOptions And CallBuilder.TableCls) And dvRow("ORDINAL_POSITION") > 0 Then
+              sSP.Append("[CLASSNAME].")
+              sSP.Append(dvRow("PARAMETER_NAME").ToString.Substring(1))
+            Else
+              If TableRec.SPOptions And CallBuilder.UseLocal And dvRow("ORDINAL_POSITION") > 0 Then
+                sSP.Append(dvRow("PARAMETER_NAME").ToString.Substring(1))
+              Else
+                sSP.Append("// [VALUE]")
+              End If
+            End If
+            sSP.Append(" = dpParam.Get<")
+            sSP.Append(clsCommon.GetTypeInfo(dvRow("DATA_TYPE")))
+            sSP.Append(">(""")
+            sSP.Append(dvRow("PARAMETER_NAME"))
+            sSP.AppendLine(""");")
+          End If
+        Next
+
+        sSP.Append(ControlChars.CrLf)
+        sSP.Append("return affectedRows;")
+        sSP.Append(ControlChars.CrLf)
+      End If
+
+
+
+      'Error Handling
+
+      If TableRec.isAnyOptionSet(CallBuilder.ExceptionHandling) Then
+        sSP.AppendFormat("{0}}}  // End try{1}", ControlChars.Tab, ControlChars.CrLf)
+        sSP.Append(ControlChars.CrLf)
+        sSP.Append("catch" & ControlChars.CrLf)
+        sSP.AppendFormat("{{{0}", ControlChars.CrLf)
+        sSP.AppendFormat("{0}throw;{1}", ControlChars.Tab, ControlChars.CrLf)
+        sSP.AppendLine("} // End Catch")
+        sSP.Append(ControlChars.CrLf)
+      End If
+
+
+
+
+      Select Case True
+        Case TableRec.isAnyOptionSet(CallBuilder.DataReader, CallBuilder.UseGlobalConnection)
+        Case Else
+          sSP.Append(ControlChars.CrLf)
+          sSP.Append("} // End SQLConnection Using")
+      End Select
+
+
+
+      sSP.Append(ControlChars.CrLf)
+      sSP.Append("} // End Function")
+
+      If TableRec.isAnyOptionSet(CallBuilder.CreateNewClass) Then
+        sSP.AppendLine()
+        sSP.AppendLine()
+        sSP.Append("public cls[Class Name](string ConnectionString) {")
+        sSP.AppendLine()
+        sSP.Append("_ConnectionString = ConnectionString;")
+        sSP.AppendLine()
+        sSP.Append("}} // End Declaration Function")
+
+      End If
+
+      Return sSP.ToString
+
+    End Function
+
     Public Sub New(ByVal sConnectionString As String)
       _ConnectionString = sConnectionString
+
+
+      _RemoveNullsFunction = My.Settings.RemoveNullsFunction
+      _SendNullsFunction = My.Settings.SendNullsFunction
     End Sub
 
 

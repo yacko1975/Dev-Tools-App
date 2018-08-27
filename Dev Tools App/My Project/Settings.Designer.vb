@@ -15,7 +15,7 @@ Option Explicit On
 Namespace My
     
     <Global.System.Runtime.CompilerServices.CompilerGeneratedAttribute(),  _
-     Global.System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.VisualStudio.Editors.SettingsDesigner.SettingsSingleFileGenerator", "15.6.0.0"),  _
+     Global.System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.VisualStudio.Editors.SettingsDesigner.SettingsSingleFileGenerator", "15.7.0.0"),  _
      Global.System.ComponentModel.EditorBrowsableAttribute(Global.System.ComponentModel.EditorBrowsableState.Advanced)>  _
     Partial Friend NotInheritable Class MySettings
         Inherits Global.System.Configuration.ApplicationSettingsBase
@@ -87,13 +87,40 @@ Namespace My
             End Set
         End Property
         
-        <Global.System.Configuration.ApplicationScopedSettingAttribute(),  _
+        <Global.System.Configuration.UserScopedSettingAttribute(),  _
          Global.System.Diagnostics.DebuggerNonUserCodeAttribute(),  _
          Global.System.Configuration.DefaultSettingValueAttribute("C#")>  _
-        Public ReadOnly Property langDefault() As String
+        Public Property langDefault() As String
             Get
                 Return CType(Me("langDefault"),String)
             End Get
+            Set
+                Me("langDefault") = value
+            End Set
+        End Property
+        
+        <Global.System.Configuration.UserScopedSettingAttribute(),  _
+         Global.System.Diagnostics.DebuggerNonUserCodeAttribute(),  _
+         Global.System.Configuration.DefaultSettingValueAttribute("KDOR.DBFunctions.RemoveNulls")>  _
+        Public Property RemoveNullsFunction() As String
+            Get
+                Return CType(Me("RemoveNullsFunction"),String)
+            End Get
+            Set
+                Me("RemoveNullsFunction") = value
+            End Set
+        End Property
+        
+        <Global.System.Configuration.UserScopedSettingAttribute(),  _
+         Global.System.Diagnostics.DebuggerNonUserCodeAttribute(),  _
+         Global.System.Configuration.DefaultSettingValueAttribute("KDOR.DBFunctions.SendNulls")>  _
+        Public Property SendNullsFunction() As String
+            Get
+                Return CType(Me("SendNullsFunction"),String)
+            End Get
+            Set
+                Me("SendNullsFunction") = value
+            End Set
         End Property
     End Class
 End Namespace

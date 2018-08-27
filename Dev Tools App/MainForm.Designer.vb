@@ -30,6 +30,7 @@ Partial Class MainForm
     Me.CreateFormFromTableToolStripMenuItem = New System.Windows.Forms.ToolStripMenuItem()
     Me.LoadFormFromTableToolStripMenuItem = New System.Windows.Forms.ToolStripMenuItem()
     Me.CreateTypeFromTableToolStripMenuItem = New System.Windows.Forms.ToolStripMenuItem()
+    Me.BuildNetProcCallToolStripMenuItem = New System.Windows.Forms.ToolStripMenuItem()
     Me.UtilitiesToolStripMenuItem = New System.Windows.Forms.ToolStripMenuItem()
     Me.StringFromCSVToolStripMenuItem = New System.Windows.Forms.ToolStripMenuItem()
     Me.SingleLineStringToolStripMenuItem = New System.Windows.Forms.ToolStripMenuItem()
@@ -46,7 +47,7 @@ Partial Class MainForm
     Me.HelpToolStripMenuItem = New System.Windows.Forms.ToolStripMenuItem()
     Me.ResetSettingsToolStripMenuItem = New System.Windows.Forms.ToolStripMenuItem()
     Me.AboutToolStripMenuItem = New System.Windows.Forms.ToolStripMenuItem()
-    Me.BuildNetProcCallToolStripMenuItem = New System.Windows.Forms.ToolStripMenuItem()
+    Me.SettingsToolStripMenuItem = New System.Windows.Forms.ToolStripMenuItem()
     Me.MenuStrip1.SuspendLayout()
     Me.SuspendLayout()
     '
@@ -61,7 +62,7 @@ Partial Class MainForm
     '
     'FileToolStripMenuItem
     '
-    Me.FileToolStripMenuItem.DropDownItems.AddRange(New System.Windows.Forms.ToolStripItem() {Me.ExitToolStripMenuItem})
+    Me.FileToolStripMenuItem.DropDownItems.AddRange(New System.Windows.Forms.ToolStripItem() {Me.ExitToolStripMenuItem, Me.SettingsToolStripMenuItem})
     Me.FileToolStripMenuItem.Name = "FileToolStripMenuItem"
     Me.FileToolStripMenuItem.Size = New System.Drawing.Size(37, 20)
     Me.FileToolStripMenuItem.Text = "File"
@@ -69,7 +70,7 @@ Partial Class MainForm
     'ExitToolStripMenuItem
     '
     Me.ExitToolStripMenuItem.Name = "ExitToolStripMenuItem"
-    Me.ExitToolStripMenuItem.Size = New System.Drawing.Size(92, 22)
+    Me.ExitToolStripMenuItem.Size = New System.Drawing.Size(180, 22)
     Me.ExitToolStripMenuItem.Text = "Exit"
     '
     'DatabaseBuildersToolStripMenuItem
@@ -102,6 +103,12 @@ Partial Class MainForm
     Me.CreateTypeFromTableToolStripMenuItem.Name = "CreateTypeFromTableToolStripMenuItem"
     Me.CreateTypeFromTableToolStripMenuItem.Size = New System.Drawing.Size(201, 22)
     Me.CreateTypeFromTableToolStripMenuItem.Text = "Create Type From Table"
+    '
+    'BuildNetProcCallToolStripMenuItem
+    '
+    Me.BuildNetProcCallToolStripMenuItem.Name = "BuildNetProcCallToolStripMenuItem"
+    Me.BuildNetProcCallToolStripMenuItem.Size = New System.Drawing.Size(201, 22)
+    Me.BuildNetProcCallToolStripMenuItem.Text = "Build .Net Proc Call"
     '
     'UtilitiesToolStripMenuItem
     '
@@ -202,11 +209,11 @@ Partial Class MainForm
     Me.AboutToolStripMenuItem.Size = New System.Drawing.Size(147, 22)
     Me.AboutToolStripMenuItem.Text = "About"
     '
-    'BuildNetProcCallToolStripMenuItem
+    'SettingsToolStripMenuItem
     '
-    Me.BuildNetProcCallToolStripMenuItem.Name = "BuildNetProcCallToolStripMenuItem"
-    Me.BuildNetProcCallToolStripMenuItem.Size = New System.Drawing.Size(201, 22)
-    Me.BuildNetProcCallToolStripMenuItem.Text = "Build .Net Proc Call"
+    Me.SettingsToolStripMenuItem.Name = "SettingsToolStripMenuItem"
+    Me.SettingsToolStripMenuItem.Size = New System.Drawing.Size(180, 22)
+    Me.SettingsToolStripMenuItem.Text = "Settings"
     '
     'MainForm
     '
@@ -250,4 +257,5 @@ Partial Class MainForm
   Friend WithEvents AboutToolStripMenuItem As ToolStripMenuItem
   Friend WithEvents ResetSettingsToolStripMenuItem As ToolStripMenuItem
   Friend WithEvents BuildNetProcCallToolStripMenuItem As ToolStripMenuItem
+  Friend WithEvents SettingsToolStripMenuItem As ToolStripMenuItem
 End Class
