@@ -59,4 +59,10 @@
     frmOptions.MdiParent = Me
     frmOptions.Show()
   End Sub
+
+  Private Sub SingleLineStringToolStripMenuItem_Click(sender As Object, e As EventArgs) Handles SingleLineStringToolStripMenuItem.Click
+    Dim frmRemoveLineFeed As New RemoveLineFeed
+    frmRemoveLineFeed.MdiParent = Me
+    frmRemoveLineFeed.Show()
+  End Sub
 End Class

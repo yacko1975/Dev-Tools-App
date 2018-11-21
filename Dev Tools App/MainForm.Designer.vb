@@ -25,6 +25,7 @@ Partial Class MainForm
     Me.MenuStrip1 = New System.Windows.Forms.MenuStrip()
     Me.FileToolStripMenuItem = New System.Windows.Forms.ToolStripMenuItem()
     Me.ExitToolStripMenuItem = New System.Windows.Forms.ToolStripMenuItem()
+    Me.SettingsToolStripMenuItem = New System.Windows.Forms.ToolStripMenuItem()
     Me.DatabaseBuildersToolStripMenuItem = New System.Windows.Forms.ToolStripMenuItem()
     Me.ScriptMultipleStoredProcedureToolStripMenuItem = New System.Windows.Forms.ToolStripMenuItem()
     Me.CreateFormFromTableToolStripMenuItem = New System.Windows.Forms.ToolStripMenuItem()
@@ -47,7 +48,6 @@ Partial Class MainForm
     Me.HelpToolStripMenuItem = New System.Windows.Forms.ToolStripMenuItem()
     Me.ResetSettingsToolStripMenuItem = New System.Windows.Forms.ToolStripMenuItem()
     Me.AboutToolStripMenuItem = New System.Windows.Forms.ToolStripMenuItem()
-    Me.SettingsToolStripMenuItem = New System.Windows.Forms.ToolStripMenuItem()
     Me.MenuStrip1.SuspendLayout()
     Me.SuspendLayout()
     '
@@ -70,8 +70,14 @@ Partial Class MainForm
     'ExitToolStripMenuItem
     '
     Me.ExitToolStripMenuItem.Name = "ExitToolStripMenuItem"
-    Me.ExitToolStripMenuItem.Size = New System.Drawing.Size(180, 22)
+    Me.ExitToolStripMenuItem.Size = New System.Drawing.Size(116, 22)
     Me.ExitToolStripMenuItem.Text = "Exit"
+    '
+    'SettingsToolStripMenuItem
+    '
+    Me.SettingsToolStripMenuItem.Name = "SettingsToolStripMenuItem"
+    Me.SettingsToolStripMenuItem.Size = New System.Drawing.Size(116, 22)
+    Me.SettingsToolStripMenuItem.Text = "Settings"
     '
     'DatabaseBuildersToolStripMenuItem
     '
@@ -208,12 +214,6 @@ Partial Class MainForm
     Me.AboutToolStripMenuItem.Name = "AboutToolStripMenuItem"
     Me.AboutToolStripMenuItem.Size = New System.Drawing.Size(147, 22)
     Me.AboutToolStripMenuItem.Text = "About"
-    '
-    'SettingsToolStripMenuItem
-    '
-    Me.SettingsToolStripMenuItem.Name = "SettingsToolStripMenuItem"
-    Me.SettingsToolStripMenuItem.Size = New System.Drawing.Size(180, 22)
-    Me.SettingsToolStripMenuItem.Text = "Settings"
     '
     'MainForm
     '

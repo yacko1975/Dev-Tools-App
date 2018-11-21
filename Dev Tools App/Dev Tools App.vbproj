@@ -98,6 +98,12 @@
     <Compile Include="Options.vb">
       <SubType>Form</SubType>
     </Compile>
+    <Compile Include="RemoveLineFeed.Designer.vb">
+      <DependentUpon>RemoveLineFeed.vb</DependentUpon>
+    </Compile>
+    <Compile Include="RemoveLineFeed.vb">
+      <SubType>Form</SubType>
+    </Compile>
     <Compile Include="SPBuilder.Designer.vb">
       <DependentUpon>SPBuilder.vb</DependentUpon>
     </Compile>
@@ -176,6 +182,9 @@
     </EmbeddedResource>
     <EmbeddedResource Include="Options.resx">
       <DependentUpon>Options.vb</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="RemoveLineFeed.resx">
+      <DependentUpon>RemoveLineFeed.vb</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="SPBuilder.resx">
       <DependentUpon>SPBuilder.vb</DependentUpon>

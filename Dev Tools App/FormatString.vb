@@ -15,4 +15,8 @@
   Private Sub btnGenerate_Click(sender As Object, e As EventArgs) Handles btnGenerate.Click
 
   End Sub
+
+  Private Sub txtResults_TextChanged(sender As Object, e As EventArgs) Handles txtResults.TextChanged
+
+  End Sub
 End Class
