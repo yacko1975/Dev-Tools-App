@@ -159,10 +159,10 @@ Partial Class CreateTypeFromTable
     'clbOptions
     '
     Me.clbOptions.FormattingEnabled = True
-    Me.clbOptions.Items.AddRange(New Object() {"Use properties to set values", "Include class definition", "Include region"})
+    Me.clbOptions.Items.AddRange(New Object() {"Use properties to set values", "Include class definition", "Include region", "Use Properties Only"})
     Me.clbOptions.Location = New System.Drawing.Point(110, 77)
     Me.clbOptions.Name = "clbOptions"
-    Me.clbOptions.Size = New System.Drawing.Size(173, 49)
+    Me.clbOptions.Size = New System.Drawing.Size(173, 64)
     Me.clbOptions.TabIndex = 19
     '
     'CreateTypeFromTable

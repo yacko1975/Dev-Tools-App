@@ -23,6 +23,8 @@ Namespace Includes
         Case Types.enLanguage.CS
           If TableRec.bProperties Then
             TableRec.sTypeClass = Create_Type_w_Properties_CS(TableRec)
+          ElseIf TableRec.bPropertiesOnly Then
+            TableRec.sTypeClass = Create_Type_w_PropertiesOnly_CS(TableRec)
           Else
             TableRec.sTypeClass = Create_Type_CS(TableRec)
           End If
@@ -149,6 +151,58 @@ Namespace Includes
       Return sbType.ToString
 
     End Function
+
+    Private Function Create_Type_w_PropertiesOnly_CS(ByVal TableRec As Types.TableFmt) As String
+      Dim sbType As New Text.StringBuilder
+      Dim ColumnRec() As Types.ColumnFmt
+      Dim bCreateClass As Boolean = TableRec.bIncludeClassDefinition
+
+      Dim iPntr As Int32
+      'Dim iIndexCnt As Int32
+
+      ColumnRec = TableRec.aylColumn.ToArray(GetType(Types.ColumnFmt))
+
+      With sbType
+
+        If TableRec.bIncludeClassDefinition Then
+          .Append("class ")
+          .Append(TableRec.sTable)
+          .Append(ControlChars.CrLf)
+          .Append("{")
+          .Append(ControlChars.CrLf)
+          .Append(ControlChars.CrLf)
+        End If
+        'Creates the Items
+        'TableRec.bIncludeClassDefinition = False
+        ''.Append(Create_Type_CS(TableRec))
+        'TableRec.bIncludeClassDefinition = bCreateClass
+        '.Append(ControlChars.CrLf)
+        If TableRec.bIncludeRegion Then
+          .Append("#region Properties")
+          .AppendLine()
+          .AppendLine()
+        End If
+        For iPntr = 0 To ColumnRec.GetUpperBound(0)
+          .Append("public  ")
+          .Append(clsCommon.GetNullableType_CS(ColumnRec(iPntr).sColumnType, ColumnRec(iPntr).bNullable, True))
+          .Append(ColumnRec(iPntr).sColumnName)
+          .Append("{ get; set; }")
+          .Append(ControlChars.CrLf)
+        Next
+        If TableRec.bIncludeRegion Then
+          .Append("#region Properties")
+          .AppendLine()
+          .AppendLine()
+        End If
+        If TableRec.bIncludeClassDefinition Then
+          .Append("}")
+        End If
+      End With
+
+      Return sbType.ToString
+
+    End Function
+
 
     Private Function Create_Type_VB(ByVal TableRec As Types.TableFmt) As String
       Dim sbType As New Text.StringBuilder

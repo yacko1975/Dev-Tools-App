@@ -87,6 +87,8 @@
           TableRec.bIncludeClassDefinition = True
         Case "Include region"
           TableRec.bIncludeRegion = True
+        Case "Use Properties Only"
+          TableRec.bPropertiesOnly = True
 
         Case Else
 
@@ -111,4 +113,6 @@
 
 
   End Sub
+
+
 End Class

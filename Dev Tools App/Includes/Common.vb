@@ -230,6 +230,63 @@ Namespace Includes
 
     End Function
 
+    Public Shared Function GetNullableType_CS(ByVal sType As String, ByVal bNullable As Boolean, Optional ByVal bAppendSpace As Boolean = False) As String
+      Dim sbType As New StringBuilder
+      Dim bNullableType As Boolean = False
+
+      With sbType
+        Select Case sType
+          Case "decimal", "numeric", "money", "smallmoney"
+            bNullableType = True
+            .Append("decimal")
+          Case "smallint", "tinyint"
+            bNullableType = True
+            .Append("short")
+          Case "int"
+            bNullableType = True
+            .Append("int")
+          Case "bigint"
+            bNullableType = True
+            .Append("long")
+          Case "char", "varchar", "nchar", "nvarchar", "text"
+            .Append("string")
+          Case "float", "real"
+            bNullableType = True
+            .Append("double")
+          Case "datetime", "smalldatetime", "date", "datetime2"
+            bNullableType = True
+            .Append("DateTime")
+          Case "datetimeoffset"
+            bNullableType = True
+            .Append("DateTimeOffset")
+          Case "time"
+            bNullableType = True
+            .Append("TimeSpan")
+          Case "bit"
+            bNullableType = True
+            .Append("bool")
+          Case "binary", "varbinary", "image"
+            bNullableType = True
+            .Append("byte[]")
+          Case Else
+            bNullableType = True
+            .Append("**Unknown**")
+        End Select
+      End With
+
+      If bNullableType AndAlso bNullable Then
+        sbType.Append("?")
+      End If
+
+      If bAppendSpace Then
+        sbType.Append(Space(1))
+      End If
+
+
+      Return sbType.ToString
+
+    End Function
+
     Public Shared Function GetType_Dapper(ByVal sType As String) As String
 
       With sType

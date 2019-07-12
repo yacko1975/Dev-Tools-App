@@ -16,7 +16,8 @@ Namespace Includes
 
     Public Function Get_Available_DBs() As SqlDataReader
       Dim DBConn As New SqlConnection(_ConnectionString)
-      Dim DBCMD As New SqlCommand("select Name from sys.databases where owner_sid <> 0x01 and state=0 order by name asc", DBConn)
+      'Dim DBCMD As New SqlCommand("select Name from sys.databases where owner_sid <> 0x01 and state=0 order by name asc", DBConn)
+      Dim DBCMD As New SqlCommand("select Name from sys.databases where state=0 order by name asc", DBConn)
 
       DBCMD.CommandType = CommandType.Text
 
@@ -183,6 +184,7 @@ Namespace Includes
           End If
           .iColumnLength = dbRdr.GetInt32(7)
           .iColumnPrecision = dbRdr.GetInt32(6)
+          .bNullable = dbRdr.GetString(17).Equals("YES")
           If IsDBNull(dbRdr(8)) Then
             .iColumnScale = 0
           Else
