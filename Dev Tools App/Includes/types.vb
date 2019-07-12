@@ -15,6 +15,7 @@ Namespace Includes.Types
     Public sCode As String
     Public bInfo As Boolean
     Public bProperties As Boolean
+    Public bPropertiesOnly As Boolean
     Public sSQL As String
     Public Action As Int32
     Public FormOptions As Int32
@@ -139,6 +140,7 @@ Namespace Includes.Types
     Public iColumnPrecision As Int32
     Public iColumnScale As Int32
     Public bColumnIdentity As Boolean
+    Public bNullable As Boolean
 
     'Added by Theo; 02/06/2017
     Public sTableOwner As String

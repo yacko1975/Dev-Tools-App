@@ -13,6 +13,26 @@
   End Sub
 
   Private Sub btnGenerate_Click(sender As Object, e As EventArgs) Handles btnGenerate.Click
+    Dim sbOutput As New Text.StringBuilder()
+    Dim sFormat As String = txtFormat.Text
+
+    Dim asLine = txtCSVData.Text.Replace(ControlChars.CrLf, ControlChars.Cr).Replace(ControlChars.Lf, ControlChars.Cr).Split(ControlChars.Cr)
+
+    For Each sLine In asLine
+      Dim asData = sLine.Split(txtSeparator.Text)
+
+      sbOutput.AppendFormat(sFormat, asData)
+      sbOutput.AppendLine()
+
+    Next
+
+
+
+    txtResults.Text = sbOutput.ToString()
+
+
 
   End Sub
+
+
 End Class
